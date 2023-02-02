@@ -1,15 +1,15 @@
-const { safeRequire, addZero } = require('../utils')
+import { safeRequire, addZero } from '../utils'
 
-const Debug = require('debug')
-const DateFormat = require('licia/dateFormat')
+import Debug from 'debug'
+import DateFormat from 'licia/dateFormat'
 
-const FsExtra = require('fs-extra')
+import { existsSync, copySync } from 'fs-extra'
 
 const DebugLog = Debug('automator:simctl')
 
-const BaseLauncher = require('./BaseLauncher')
+import BaseLauncher from './BaseLauncher'
 
-module.exports = class IosLauncher extends BaseLauncher {
+export default class IosLauncher extends BaseLauncher {
   constructor() {
     super(...arguments), (this.bundleVersion = '')
   }
@@ -83,10 +83,10 @@ module.exports = class IosLauncher extends BaseLauncher {
   }
 
   exists(t) {
-    return FsExtra.existsSync(t) ? Promise.resolve(true) : Promise.reject(Error(`${t} not exists`))
+    return existsSync(t) ? Promise.resolve(true) : Promise.reject(Error(`${t} not exists`))
   }
 
   pushFile(filepath, targetPath) {
-    return Promise.resolve(FsExtra.copySync(filepath, targetPath))
+    return Promise.resolve(copySync(filepath, targetPath))
   }
 }

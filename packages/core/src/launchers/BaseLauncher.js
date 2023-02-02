@@ -1,14 +1,14 @@
-const Debug = require('debug')
-const DateFormat = require('licia/dateFormat')
+import Debug from 'debug'
+import DateFormat from 'licia/dateFormat'
 
-const Fs = require('fs')
-const Path = require('path')
-const Util = require('util')
+import { readdir as _readdir, stat as _stat, existsSync } from 'fs'
+import { resolve, join, relative } from 'path'
+import { promisify } from 'util'
 
 const DebugLog = Debug('automator:launcher')
 
-const readdir = Util.promisify(Fs.readdir)
-const stat = Util.promisify(Fs.stat)
+const readdir = promisify(_readdir)
+const stat = promisify(_stat)
 const isWindows = /^win/.test(process.platform)
 
 const pusher = async path => {
@@ -16,7 +16,7 @@ const pusher = async path => {
   return (
     await Promise.all(
       filenames.map(async filename => {
-        const filepath = Path.resolve(path, filename)
+        const filepath = resolve(path, filename)
         const isDir = (await stat(filepath)).isDirectory()
         return isDir ? pusher(filepath) : filepath
       })
@@ -24,7 +24,7 @@ const pusher = async path => {
   ).reduce((t, e) => t.concat(e), [])
 }
 
-module.exports = class BaseLauncher {
+export default class BaseLauncher {
   constructor(options) {
     this.id = options.id
     this.app = options.app
@@ -45,7 +45,7 @@ module.exports = class BaseLauncher {
   async push(t) {
     const e = await pusher(t)
     const s = e.map(e_1 => {
-      const s_1 = (t_2 => (isWindows ? t_2.replace(/\\/g, '/') : t_2))(Path.join(this.DIR_WWW, Path.relative(t, e_1)))
+      const s_1 = (t_2 => (isWindows ? t_2.replace(/\\/g, '/') : t_2))(join(this.DIR_WWW, relative(t, e_1)))
       return DebugLog(`${DateFormat('yyyy-mm-dd HH:MM:ss:l')} push ${e_1} ${s_1}`), this.pushFile(e_1, s_1)
     })
     await Promise.all(s)
@@ -59,7 +59,7 @@ module.exports = class BaseLauncher {
     }
     if (!this.app) {
       throw Error(`app-plus app is not provided`)
-    } else if (!Fs.existsSync(this.app)) {
+    } else if (!existsSync(this.app)) {
       throw Error(`${this.app} not exists`)
     }
     return this.install()

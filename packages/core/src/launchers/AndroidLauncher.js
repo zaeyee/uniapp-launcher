@@ -1,14 +1,14 @@
 // const Debug = require('debug').default
-const DateFormat = require('licia/dateFormat')
+import DateFormat from 'licia/dateFormat'
 
-const Adb = require('@devicefarmer/adbkit').default
+import Adb from '@devicefarmer/adbkit'
 
 // const DebugLog = Debug('automator:adb')
 const DebugLog = console.log
 
-const BaseLauncher = require('./BaseLauncher')
+import BaseLauncher from './BaseLauncher'
 
-module.exports = class AndroidLauncher extends BaseLauncher {
+export default class AndroidLauncher extends BaseLauncher {
   get DIR_WWW() {
     return `/storage/emulated/0/Android/data/${this.package}/apps/${this.appid}/www`
   }
