@@ -1,5 +1,5 @@
 {
-  "name": "uniapp-launcher",
+  "name": "uniapp-launcher-monorepo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,10 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "adbkit": "^2.11.1",
-    "debug": "^4.3.4",
-    "fs-extra": "^11.1.0",
-    "licia": "^1.37.1"
+  "devDependencies": {
+    "@zaeyee/eslint-config-base": "^0.3.0",
+    "eslint": "^8.33.0",
+    "prettier": "^2.8.3"
   }
 }
