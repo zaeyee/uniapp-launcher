@@ -10,16 +10,35 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:uniapp-launcher.helloWorld"
+    "onCommand:uniapp-launcher.launch"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "uniapp-launcher.helloWorld",
-        "title": "uniapp"
+        "category": "uniapp-launcher",
+        "command": "uniapp-launcher.launch",
+        "title": "launch",
+        "icon": "$(play)"
       }
-    ]
+    ],
+    "keybindings": [
+      {
+        "command": "uniapp-launcher.launch",
+        "key": "ctrl+f1",
+        "mac": "cmd+f1",
+        "when": "resourceFilename == manifest.json"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "uniapp-launcher.launch",
+          "group": "navigation",
+          "when": "resourceFilename == manifest.json"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
@@ -30,16 +49,16 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
     "@types/glob": "^8.0.1",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
-    "@typescript-eslint/eslint-plugin": "^5.49.0",
-    "@typescript-eslint/parser": "^5.49.0",
-    "eslint": "^8.33.0",
+    "@types/vscode": "^1.74.0",
+    "@vscode/test-electron": "^2.2.2",
     "glob": "^8.1.0",
     "mocha": "^10.1.0",
-    "typescript": "^4.9.4",
-    "@vscode/test-electron": "^2.2.2"
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "uniapp-launcher": "workspace:*"
   }
 }

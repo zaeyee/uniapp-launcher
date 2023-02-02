@@ -34,6 +34,9 @@ importers:
       glob: ^8.1.0
       mocha: ^10.1.0
       typescript: ^4.9.4
+      uniapp-launcher: workspace:1.0.0
+    dependencies:
+      uniapp-launcher: link:../core
     devDependencies:
       '@types/glob': 8.0.1
       '@types/mocha': 10.0.1
