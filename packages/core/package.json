@@ -16,6 +16,12 @@
     "@devicefarmer/adbkit": "^3.2.3",
     "debug": "^4.3.4",
     "fs-extra": "^11.1.0",
-    "licia": "^1.37.1"
+    "licia": "^1.37.1",
+    "node-simctl": "^7.1.11"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.11.18"
   }
 }
