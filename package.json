@@ -1,17 +1,71 @@
 {
-  "name": "uniapp-launcher-monorepo",
-  "version": "1.0.0",
+  "name": "uniapp-launcher",
+  "displayName": "uniapp-launcher",
+  "publisher": "zaeyee",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:uniapp-launcher.launch"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "contributes": {
+    "commands": [
+      {
+        "category": "uniapp-launcher",
+        "command": "uniapp-launcher.launch",
+        "title": "launch",
+        "icon": "$(play)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "uniapp-launcher.launch",
+        "key": "ctrl+f1",
+        "mac": "cmd+f1"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "uniapp-launcher.launch",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "pnpm run compile && pnpm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "dependencies": {
+    "@devicefarmer/adbkit": "^3.2.3",
+    "debug": "^4.3.4",
+    "fs-extra": "^11.1.0",
+    "licia": "^1.37.1",
+    "node-simctl": "^7.1.11"
+  },
   "devDependencies": {
+    "@types/glob": "^8.0.1",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@vscode/test-electron": "^2.2.2",
     "@zaeyee/eslint-config-ts": "^0.3.0",
     "eslint": "^8.33.0",
-    "prettier": "^2.8.3"
+    "glob": "^8.1.0",
+    "mocha": "^10.1.0",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.4"
   }
 }

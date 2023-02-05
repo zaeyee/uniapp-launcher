@@ -35,17 +35,25 @@ importers:
 
   packages/vscode:
     specifiers:
+      '@devicefarmer/adbkit': ^3.2.3
       '@types/glob': ^8.0.1
       '@types/mocha': ^10.0.1
       '@types/node': 16.x
       '@types/vscode': ^1.74.0
       '@vscode/test-electron': ^2.2.2
+      debug: ^4.3.4
+      fs-extra: ^11.1.0
       glob: ^8.1.0
+      licia: ^1.37.1
       mocha: ^10.1.0
+      node-simctl: ^7.1.11
       typescript: ^4.9.4
-      uniapp-launcher: workspace:*
     dependencies:
-      uniapp-launcher: link:../core
+      '@devicefarmer/adbkit': 3.2.3
+      debug: 4.3.4
+      fs-extra: 11.1.0
+      licia: 1.37.1
+      node-simctl: 7.1.11
     devDependencies:
       '@types/glob': 8.0.1
       '@types/mocha': 10.0.1

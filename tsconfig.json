@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "outDir": "dist",
+    "lib": ["ESNext"],
+    "sourceMap": true,
+    "rootDir": "src"
+  },
+  "exclude": ["**/node_modules/**", "**/dist/**"]
+}
