@@ -1,8 +1,6 @@
 import Adb, { Client, DeviceClient } from '@devicefarmer/adbkit'
 
 import BaseLauncher from './BaseLauncher'
-import { ReadStream } from 'fs'
-
 import { debugLog } from '../utils'
 
 export default class AndroidLauncher extends BaseLauncher {
@@ -11,7 +9,7 @@ export default class AndroidLauncher extends BaseLauncher {
   storage!: string
 
   get DIR_WWW() {
-    return `/storage/emulated/0/Android/data/${this._package}/apps/${this._appid}/www`
+    return `/storage/emulated/0/Android/data/${this._appPackage}/apps/${this._appid}/www`
   }
 
   get COMMAND_EXTERNAL() {
@@ -19,14 +17,14 @@ export default class AndroidLauncher extends BaseLauncher {
   }
 
   get COMMAND_VERSION() {
-    return `dumpsys package ${this._package}`
+    return `dumpsys package ${this._appPackage}`
   }
 
   get COMMAND_STOP() {
-    return `am force-stop ${this._package}`
+    return `am force-stop ${this._appPackage}`
   }
   get COMMAND_START() {
-    return `am start -n ${this._package}/io.dcloud.PandoraEntry --es ${this._appid} --ez needUpdateApp false --ez reload true`
+    return `am start -n ${this._appPackage}/io.dcloud.PandoraEntry --es ${this._appid} --ez needUpdateApp false --ez reload true`
   }
 
   async init() {
@@ -68,7 +66,7 @@ export default class AndroidLauncher extends BaseLauncher {
 
   async install(): Promise<boolean> {
     debugLog(`app installing...`)
-    return this.device.install(this._app)
+    return this.device.install(this._appPath)
   }
 
   async start() {
@@ -101,7 +99,7 @@ export default class AndroidLauncher extends BaseLauncher {
     }
   }
 
-  push(contents: string | ReadStream, path: string) {
-    return this.device.push(contents, path)
+  push(path: string, targetPath: string) {
+    return this.device.push(path, targetPath)
   }
 }

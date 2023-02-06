@@ -1,4 +1,3 @@
-import fs from 'fs/promises'
 import { join, relative } from 'path'
 
 import { LauncherOptions } from '../types'
@@ -14,17 +13,19 @@ interface Launcher {
 
 export default abstract class BaseLauncher implements Launcher {
   protected _id: string
-  protected _app: string
   protected _appid: string
-  protected _package: string
-  protected _filesDir: string
+  protected _appPath: string
+  protected _appPackage: string
+  protected _rootPath: string
+  protected _filesPath: string
 
   constructor(options: LauncherOptions) {
     this._id = options.id || ''
-    this._app = options.app || ''
     this._appid = options.appid || 'HBuilder'
-    this._package = options.package || 'io.dcloud.HBuilder'
-    this._filesDir = options.filesDir || 'dist/dev/app/**'
+    this._appPath = options.appPath || ''
+    this._appPackage = options.appPackage || 'io.dcloud.HBuilder'
+    this._rootPath = options.rootPath || ''
+    this._filesPath = options.filesPath || 'dist/dev/app'
   }
 
   get DIR_WWW(): string {
@@ -55,14 +56,16 @@ export default abstract class BaseLauncher implements Launcher {
     debugLog(`init app starting...`)
     const version = await this.version()
     if (version) return
-    if (!this._app) {
+    if (!this._appPath) {
       throw Error(`app-plus app is not provided`)
-    } else if (!fs.stat(this._app)) {
-      throw Error(`${this._app} not exists`)
     }
     await this.install()
   }
 
+  /**
+   * 同步编译后的文件到手机端基座
+   * @returns
+   */
   async initFiles() {
     debugLog(`init app files...`)
     if (await this.exists(this.FILE_APP_SERVICE)) {
@@ -70,13 +73,12 @@ export default abstract class BaseLauncher implements Launcher {
       return
     }
     debugLog(`${this.FILE_APP_SERVICE} not exists`)
-    const filepaths = await getFilepaths(this._filesDir)
-    filepaths.forEach((filepath: string) => {
-      const targetPath = join(this.DIR_WWW, relative(this._filesDir, filepath))
+    const filepaths = await getFilepaths(this._filesPath)
+    filepaths.forEach(async (filepath: string) => {
+      const targetPath = join(this.DIR_WWW, relative(this._filesPath, filepath))
+      filepath = join(this._rootPath, filepath)
       debugLog(`push ${filepath} ${targetPath}`)
-      this.push(filepath, targetPath)
+      await this.push(filepath, targetPath)
     })
-    // await Promise.all(filepaths)
-    return true
   }
 }

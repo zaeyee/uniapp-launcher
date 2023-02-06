@@ -1,6 +1,4 @@
 import DateFormat from 'licia/dateFormat'
-import fs from 'fs/promises'
-import { resolve } from 'path'
 import { workspace } from 'vscode'
 
 export const debugLog = (message: string) => {
@@ -13,15 +11,6 @@ export const addZero = (number: number | string) => {
 }
 
 export const getFilepaths = async (dirPath: string) => {
-  const fileUris = await workspace.findFiles(dirPath)
+  const fileUris = await workspace.findFiles(dirPath + '/**')
   return fileUris.map(fileUri => workspace.asRelativePath(fileUri, false))
-  // return (
-  //   await Promise.all(
-  //     filenames.map(async filename => {
-  //       const filepath = resolve(dirPath, filename)
-  //       const isDir = (await fs.stat(filepath)).isDirectory()
-  //       return isDir ? getFilepaths(filepath) : filepath
-  //     })
-  //   )
-  // ).reduce((prev, current) => prev.concat(current), [])
 }

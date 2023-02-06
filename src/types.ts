@@ -2,8 +2,9 @@ export type Platform = 'android' | 'ios'
 
 export interface LauncherOptions {
   id?: string
-  app?: string
   appid?: string
-  package?: string
-  filesDir?: string
+  appPath?: string
+  appPackage?: string
+  rootPath?: string
+  filesPath?: string
 }
