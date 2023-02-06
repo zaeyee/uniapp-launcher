@@ -1,7 +1,7 @@
 import { join, relative } from 'path'
 
 import { LauncherOptions } from '../types'
-import { debugLog, getFilepaths } from '../utils'
+import { getFilepaths } from '../utils'
 
 interface Launcher {
   get DIR_WWW(): string
@@ -18,6 +18,7 @@ export default abstract class BaseLauncher implements Launcher {
   protected _appPackage: string
   protected _rootPath: string
   protected _filesPath: string
+  protected _log: (message: string) => void
 
   constructor(options: LauncherOptions) {
     this._id = options.id || ''
@@ -26,6 +27,11 @@ export default abstract class BaseLauncher implements Launcher {
     this._appPackage = options.appPackage || 'io.dcloud.HBuilder'
     this._rootPath = options.rootPath || ''
     this._filesPath = options.filesPath || 'dist/dev/app'
+    this._log = options.log
+  }
+
+  get id() {
+    return this._id
   }
 
   get DIR_WWW(): string {
@@ -53,9 +59,12 @@ export default abstract class BaseLauncher implements Launcher {
   }
 
   async initApp(): Promise<void> {
-    debugLog(`init app starting...`)
     const version = await this.version()
-    if (version) return
+    if (version) {
+      // TODO: 判断是否需要更新基座
+      this._log(`手机端调试基座版本号为${version}，版本号相同，跳过基座更新`)
+      return
+    }
     if (!this._appPath) {
       throw Error(`app-plus app is not provided`)
     }
@@ -67,18 +76,16 @@ export default abstract class BaseLauncher implements Launcher {
    * @returns
    */
   async initFiles() {
-    debugLog(`init app files...`)
-    if (await this.exists(this.FILE_APP_SERVICE)) {
-      debugLog(`${this.FILE_APP_SERVICE} exists`)
-      return
+    this._log(`正在同步手机端程序文件...`)
+    if (!(await this.exists(this.FILE_APP_SERVICE))) {
+      const filepaths = await getFilepaths(this._filesPath)
+      filepaths.forEach(async (filepath: string) => {
+        const targetPath = join(this.DIR_WWW, relative(this._filesPath, filepath))
+        filepath = join(this._rootPath, filepath)
+        // this._log(`push ${filepath} ${targetPath}`)
+        await this.push(filepath, targetPath)
+      })
     }
-    debugLog(`${this.FILE_APP_SERVICE} not exists`)
-    const filepaths = await getFilepaths(this._filesPath)
-    filepaths.forEach(async (filepath: string) => {
-      const targetPath = join(this.DIR_WWW, relative(this._filesPath, filepath))
-      filepath = join(this._rootPath, filepath)
-      debugLog(`push ${filepath} ${targetPath}`)
-      await this.push(filepath, targetPath)
-    })
+    this._log(`同步手机端程序文件完成`)
   }
 }

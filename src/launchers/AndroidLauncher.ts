@@ -1,7 +1,6 @@
 import Adb, { Client, DeviceClient } from '@devicefarmer/adbkit'
 
 import BaseLauncher from './BaseLauncher'
-import { debugLog } from '../utils'
 
 export default class AndroidLauncher extends BaseLauncher {
   client!: Client
@@ -29,7 +28,7 @@ export default class AndroidLauncher extends BaseLauncher {
 
   async init() {
     try {
-      debugLog(`init starting...`)
+      this._log(`正在建立手机连接...`)
       this.client = Adb.createClient()
       if (this.client && !this._id) {
         const devices = await this.client.listDevices()
@@ -40,17 +39,16 @@ export default class AndroidLauncher extends BaseLauncher {
       this.storage = (await this.shell(this.COMMAND_EXTERNAL)).trim()
       await this.initApp()
       await this.initFiles()
-      debugLog(`init succeeded: ${this._id} ${this.storage}`)
     } catch (error) {
-      debugLog(`init failed, error: ${error}`)
+      this._log(`手机连接失败：${error}`)
     }
   }
 
   async shell(command: string) {
-    debugLog(`SEND ► ${command}`)
+    // this._log(`SEND ► ${command}`)
     const stream = await this.device.shell(command)
     const result = (await Adb.util.readAll(stream)).toString()
-    debugLog(`◀ RECV ${result}`)
+    // this._log(`◀ RECV ${result}`)
     return result
   }
 
@@ -65,13 +63,15 @@ export default class AndroidLauncher extends BaseLauncher {
   }
 
   async install(): Promise<boolean> {
-    debugLog(`app installing...`)
+    this._log(`正在安装手机端${this._id}调试基座...`)
     return this.device.install(this._appPath)
   }
 
   async start() {
+    this._log(`正在启动${this._appid}调试基座...`)
     await this.exit()
-    return await this.shell(this.COMMAND_START)
+    await this.shell(this.COMMAND_START)
+    this._log(`应用${this._appid}已启动`)
   }
 
   exit() {

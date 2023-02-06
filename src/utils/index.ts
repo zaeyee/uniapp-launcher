@@ -1,9 +1,4 @@
-import DateFormat from 'licia/dateFormat'
 import { workspace } from 'vscode'
-
-export const debugLog = (message: string) => {
-  console.log(`[uniapp-launcher] ${DateFormat('yyyy-mm-dd HH:MM:ss:l')} ${message}`)
-}
 
 export const addZero = (number: number | string) => {
   number = +number

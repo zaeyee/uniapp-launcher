@@ -7,4 +7,5 @@ export interface LauncherOptions {
   appPackage?: string
   rootPath?: string
   filesPath?: string
+  log?: (message: string) => void
 }
